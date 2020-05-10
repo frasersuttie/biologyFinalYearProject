@@ -1,0 +1,49 @@
+rnabin <- abs(rnaCor) # This section converts the RNA-Seq matrix into a binary matrix for similarity integration.
+rnabin[which(rnabin > sd(rnaCor))] <- 1
+rnabin[which(rnabin != 1)] <- 0
+
+chipbin <- chipfwt # This section binarizes the ChIP-Seq matrix for successful integration.
+chipbin[which(chipbin > 1)] <- 1
+chipbin[which(chipbin != 1)] <- 0
+
+chipgenes <- colnames(chipbin)
+rnagenes <- colnames(rnabin)
+
+matched <- intersect(rnagenes, chipgenes) # We identify the genes that are present in both datasets.
+rna <- rnabin[na.omit(match(matched,rnagenes)),na.omit(match(matched,rnagenes))] # Then limit each dataset to just these genes.
+chip <- chipbin[na.omit(match(matched,chipgenes)),na.omit(match(matched,chipgenes))]
+
+integrated <- rna %*% chip # The initial integration.
+
+integbin <- abs(integrated) # The binarization of the integrated matrix for futher multiplication.
+integbin[which(integbin > sd(integrated))] <- 1
+integbin[which(integbin != 1)] <- 0
+
+integrated.mmt <- integbin %*% t(integbin) # Dot product of the integrated matrix by its transpose.
+heatmap.2(integrated.mmt, trace = "none") # Generate a heatmap of this new matrix.
+
+integrated.mtm <- t(integbin) %*% integbin # Dot product of the integrated transpose by the original.
+heatmap.2(integrated.mtm, trace = "none") # Generate a heatmap of this new matrix
+
+rnadis <- abs(rnaCor) # A reproduction of the previous code, but this time for the dissimilarity matrices.
+rnadis[which(rnadis <= sd(rnaCor))] <- 1
+rnadis[which(rnadis != 1)] <- 0
+
+chipgenes <- colnames(chipbin)
+rnagenes <- colnames(rnadis)
+
+matched<-intersect(rnagenes,chipgenes)
+rnadis2<-rnadis[na.omit(match(matched,rnagenes)),na.omit(match(matched,rnagenes))]
+chipdis2<-chipbin[na.omit(match(matched,chipgenes)),na.omit(match(matched,chipgenes))]
+
+disIntegrated <- rnadis2 %*% chipdis2
+
+disIntegbin <- abs(disIntegrated)
+disIntegbin[which(disIntegbin > sd(disIntegrated))] <- 1
+disIntegbin[which(disIntegbin != 1)] <- 0
+
+disIntegrated.mmt <- disIntegbin %*% t(disIntegbin)
+heatmap.2(disIntegrated.mmt, trace = "none")
+
+disIntegrated.mtm <- t(disIntegbin) %*% disIntegbin
+heatmap.2(disIntegrated.mtm, trace = "none")
