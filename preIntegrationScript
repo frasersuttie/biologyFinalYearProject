@@ -1,0 +1,9 @@
+preChipfwt # 'preChipfwt' is the initial binary ChIP-Seq matrix generated from the downloaded data.
+chipfwt <- t(preChipfwt) %*% preChipfwt # Matrix multiplying the transpose of the matrix by the original generates a co-occurrence matrix
+colnames(chipfwt) <- geneNames
+rownames(chipfwt) <- colnames(chipfwt)
+diag(chipfwt) <- 1 
+
+rnaCor <- cor(rnafwt, rnafwt) # 'rnafwt' is the RNA-Seq matrix from the downloaded data.
+rem <- which(is.na(colSums(rnacor[1:4,]))) # Removal of any genes with no signal in any sample
+rnaCor <- rnaCor[-rem, -rem] # 'rnaCor' is now a correlation matrix of the original RNA-Seq matrix.
