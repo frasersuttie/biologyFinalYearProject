@@ -1,0 +1,43 @@
+vars <- apply(rnafwt, 2, var, na.rm = T) # 'rnafwt' is the matrix; if columns are genes and rows are samples, change the '1' to a '2'
+rnafwtVars <- rbind(rnafwt, vars) # Makes a copy of the matrix, but with 'vars' as the bottom row
+rnaVarsLim <- rnafwtVars # Makes another copy that will become the limited matrix
+sortedVars <- sort(vars) # Puts the variance in acending order
+geneNumber <- 1000 # Sets the number of genes that the matrix will be limited to
+sortedVarsLim <- sortedVars[(length(vars) - (geneNumber) : length(vars))] # Limits the sorted variance to the no. genes
+threshold <- mean((sortedVarsLim[1]) : (sortedVarsLim[2])) # Generates the threshold from the correct cut-off point
+
+while(ncol(rnaVarsLim) > (geneNumber)) { # Start of loop to limit the matrix
+  
+  for(gene in 1:(geneNumber)) { # Start of loop to cut the low variance genes in the first 'geneNumber' columns
+    
+    if(rnaVarsLim[11, gene] < threshold) { # First no. is the 'vars' row; is the value less than the threshold?*
+      
+      rnaVarsLim <- rnaVarsLim[, -(gene)] # Code to remove the column if its variance is too low**
+     
+    } # End of this round of the cut
+  } # End of the loop to cut the low variance genes in the first 'geneNumber' columns
+  
+  for(gene in 1:(geneNumber)) { # Start of loop to cut the low variance genes in the last 'geneNumber' columns
+    
+    if(rnaVarsLim[11, (ncol(rnaVarsLim) + 1) - (gene)] < threshold) { # *
+      
+      rnaVarsLim <- rnaVarsLim[, -((ncol(rnaVarsLim) + 1) - (gene))] # **
+      
+    } # End of this round of the cut
+  } # End of the loop to cut the low variance genes in the last 'geneNumber' columns
+  
+  if(ncol(rnaVarsLim) == geneNumber + 1) { # Check for the matrix being one gene too large
+   
+    for(gene in 1: geneNumber) { # Setting up a check to remove the minimum from the 'geneNumber' list; issue if min is at 'geneNumber' + 1
+      
+      if(rnaVarsLim[11, gene] == (min(rnaVarsLim[11, ]))) { # *
+        
+        rnaVarsLim <- rnaVarsLim[, -(gene)] # **
+        
+      } # End of the final round of the cut
+    } # End of the ('geneNumber + 1) for loop
+  } # End of the one gene too large check
+} # End of loop to limit the matrix
+
+rnaVarsLim <- rnaVarsLim[-11, ] # Removes the 'vars' row from the bottom of the limited matrix
+saveRDS(rnaVarsLim, "rnaSeqLim1,000OGT.rds") # Save the newly limited matrix as a .rds file
