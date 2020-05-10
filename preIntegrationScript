@@ -4,6 +4,6 @@ colnames(chipfwt) <- geneNames
 rownames(chipfwt) <- colnames(chipfwt)
 diag(chipfwt) <- 1 
 
-rnaCor <- cor(rnafwt, rnafwt) # 'rnafwt' is the RNA-Seq matrix from the downloaded data.
+rnaCor <- cor(rnafwt, rnafwt) # 'rnafwt' is the RNA-Seq matrix once it has gone through the variance limiter script.
 rem <- which(is.na(colSums(rnacor[1:4,]))) # Removal of any genes with no signal in any sample
 rnaCor <- rnaCor[-rem, -rem] # 'rnaCor' is now a correlation matrix of the original RNA-Seq matrix.
