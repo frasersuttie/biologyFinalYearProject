@@ -2,7 +2,7 @@ vars <- apply(rnafwt, 2, var, na.rm = T) # 'rnafwt' is the matrix; if columns ar
 rnafwtVars <- rbind(rnafwt, vars) # Makes a copy of the matrix, but with 'vars' as the bottom row
 rnaVarsLim <- rnafwtVars # Makes another copy that will become the limited matrix
 sortedVars <- sort(vars) # Puts the variance in acending order
-geneNumber <- 1000 # Sets the number of genes that the matrix will be limited to
+geneNumber <- 4000 # Sets the number of genes that the matrix will be limited to
 sortedVarsLim <- sortedVars[(length(vars) - (geneNumber) : length(vars))] # Limits the sorted variance to the no. genes
 threshold <- mean((sortedVarsLim[1]) : (sortedVarsLim[2])) # Generates the threshold from the correct cut-off point
 
