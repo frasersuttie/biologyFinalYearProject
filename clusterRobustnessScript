@@ -1,0 +1,8 @@
+robustDisGenesFWT <- fwtDisGenes[which(is.na(match(fwtDisGenes, fwtSimGenes)))] # removal of any genes also found in the similarity cluster
+robustSimGenesFWT <- fwtSimGenes[which(is.na(match(fwtSimGenes, fwtDisGenes)))] # removal of any genes also found in the dissimilarity cluster
+
+robustDisGenesMWT <- mwtDisGenes[which(is.na(match(mwtDisGenes, mwtSimGenes)))] # removal of any genes also found in the similarity cluster
+robustSimGenesMWT <- mwtSimGenes[which(is.na(match(mwtSimGenes, mwtDisGenes)))] # removal of any genes also found in the dissimilarity cluster
+
+robustDisGenesOGT <- ogtDisGenes[which(is.na(match(ogtDisGenes, ogtSimGenes)))] # removal of any genes also found in the similarity cluster
+robustSimGenesOGT <- ogtSimGenes[which(is.na(match(ogtSimGenes, ogtDisGenes)))] # removal of any genes also found in the dissimilarity cluster
